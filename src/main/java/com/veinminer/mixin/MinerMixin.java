@@ -1,6 +1,8 @@
 package com.veinminer.mixin;
 
+import com.veinminer.VeinMiner;
 import com.veinminer.apis.Task;
+import com.veinminer.config.VeinMinerConfigData;
 import com.veinminer.utils.MiningTask;
 import com.veinminer.utils.VeinMinerConfigImpl;
 import net.minecraft.core.BlockPos;
@@ -37,6 +39,8 @@ public class MinerMixin {
 
     @Inject(method = "destroyAndAck", at = @At("HEAD"))
     private void onDestroyAndAck(BlockPos pos, int sequence, String exitId, CallbackInfo ci) {
+        VeinMinerConfigData config = VeinMinerConfigData.INSTANCE;
+        VeinMiner.log("State: " + config.toString());
         if (!veinMinerConfig.isVeinMinerEnabled()) {
             return;
         }

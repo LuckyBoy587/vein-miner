@@ -1,50 +1,42 @@
 package com.veinminer.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import com.google.gson.internal.bind.MapTypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
 import com.veinminer.VeinMiner;
+import me.shedaniel.autoconfig.serializer.ConfigSerializer;
 import net.fabricmc.loader.api.FabricLoader;
+import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class VeinMinerConfigData {
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+public class VeinMinerConfigData extends HashMap<String, Boolean> {
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("vein-miner.json");
+
+    private static final Gson GSON = new GsonBuilder()
+            .setPrettyPrinting()
+            .create();
 
     public static VeinMinerConfigData INSTANCE = new VeinMinerConfigData();
 
-    // Master switch
-    public boolean enableVeinMiner = true;
-
-    // Pickaxes
-    public boolean woodenPickaxe = true;
-    public boolean stonePickaxe = true;
-    public boolean ironPickaxe = true;
-    public boolean goldenPickaxe = true;
-    public boolean diamondPickaxe = true;
-    public boolean netheritePickaxe = true;
-
-    // Blocks
-    public boolean ores = true;
-    public boolean magmaBlock = true;
-
-    // Custom Blocks
-    public List<String> customBlocks = new ArrayList<>();
+    public VeinMinerConfigData() {
+        super();
+    }
 
     public static void load() {
         if (Files.exists(CONFIG_PATH)) {
             try (BufferedReader reader = Files.newBufferedReader(CONFIG_PATH)) {
                 VeinMinerConfigData data = GSON.fromJson(reader, VeinMinerConfigData.class);
                 if (data != null) {
-                    if (data.customBlocks == null) {
-                        data.customBlocks = new ArrayList<>();
-                    }
                     INSTANCE = data;
                     VeinMiner.LOGGER.info("Vein Miner configuration loaded successfully.");
                     return;

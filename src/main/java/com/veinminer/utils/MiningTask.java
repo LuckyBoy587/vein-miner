@@ -77,6 +77,7 @@ public class MiningTask implements Task {
     private boolean mineBlock(BlockPos pos) {
         ItemStack heldItem = player.getMainHandItem();
         if (!veinMinerConfig.isVeinMinerTool(heldItem)) {
+            queue.clear();
             return false;
         }
         player.gameMode.destroyBlock(pos);

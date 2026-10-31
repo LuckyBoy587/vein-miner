@@ -1,10 +1,13 @@
 package com.veinminer.client.gui;
 
+import com.veinminer.config.VeinMinerConfigConstants;
 import com.veinminer.config.VeinMinerConfigData;
+import com.veinminer.tools.AxeGroup;
+import com.veinminer.tools.PickaxeGroup;
+import com.veinminer.tools.ShovelGroup;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -25,108 +28,26 @@ public class VeinMinerConfigScreen {
         // 1. Master toggle at top
         general.addEntry(entryBuilder.startBooleanToggle(
                         Component.translatable("text.vein-miner.config.enable_vein_miner"),
-                        config.enableVeinMiner
+                        config.getOrDefault(VeinMinerConfigConstants.ENABLED, true)
                 )
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("text.vein-miner.config.enable_vein_miner.tooltip"))
-                .setSaveConsumer(newValue -> config.enableVeinMiner = newValue)
+                .setSaveConsumer(newValue -> config.put(VeinMinerConfigConstants.ENABLED, newValue))
                 .build());
 
-        // 2. Pickaxes section
-        SubCategoryBuilder pickaxesSub = entryBuilder.startSubCategory(
-                Component.translatable("category.vein-miner.pickaxes")
-        );
-        pickaxesSub.setExpanded(true);
+        general.addEntry(entryBuilder.startBooleanToggle(
+                Component.translatable("text.vein-miner.config.block.ores"),
+                config.getOrDefault(VeinMinerConfigConstants.ORES, true)
+            )
+            .setDefaultValue(true)
+            .setTooltip(Component.translatable("text.vein-miner.config.block.ores.tooltip"))
+            .setSaveConsumer(newValue -> config.put(VeinMinerConfigConstants.ORES, newValue))
+            .build());
 
-        pickaxesSub.add(entryBuilder.startBooleanToggle(
-                        Component.translatable("text.vein-miner.config.pickaxe.wooden"),
-                        config.woodenPickaxe
-                )
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> config.woodenPickaxe = val)
-                .build());
-
-        pickaxesSub.add(entryBuilder.startBooleanToggle(
-                        Component.translatable("text.vein-miner.config.pickaxe.stone"),
-                        config.stonePickaxe
-                )
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> config.stonePickaxe = val)
-                .build());
-
-        pickaxesSub.add(entryBuilder.startBooleanToggle(
-                        Component.translatable("text.vein-miner.config.pickaxe.iron"),
-                        config.ironPickaxe
-                )
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> config.ironPickaxe = val)
-                .build());
-
-        pickaxesSub.add(entryBuilder.startBooleanToggle(
-                        Component.translatable("text.vein-miner.config.pickaxe.golden"),
-                        config.goldenPickaxe
-                )
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> config.goldenPickaxe = val)
-                .build());
-
-        pickaxesSub.add(entryBuilder.startBooleanToggle(
-                        Component.translatable("text.vein-miner.config.pickaxe.diamond"),
-                        config.diamondPickaxe
-                )
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> config.diamondPickaxe = val)
-                .build());
-
-        pickaxesSub.add(entryBuilder.startBooleanToggle(
-                        Component.translatable("text.vein-miner.config.pickaxe.netherite"),
-                        config.netheritePickaxe
-                )
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> config.netheritePickaxe = val)
-                .build());
-
-        general.addEntry(pickaxesSub.build());
-
-        // 3. Blocks section
-        SubCategoryBuilder blocksSub = entryBuilder.startSubCategory(
-                Component.translatable("category.vein-miner.blocks")
-        );
-        blocksSub.setExpanded(true);
-
-        blocksSub.add(entryBuilder.startBooleanToggle(
-                        Component.translatable("text.vein-miner.config.block.ores"),
-                        config.ores
-                )
-                .setDefaultValue(true)
-                .setTooltip(Component.translatable("text.vein-miner.config.block.ores.tooltip"))
-                .setSaveConsumer(val -> config.ores = val)
-                .build());
-
-        blocksSub.add(entryBuilder.startBooleanToggle(
-                        Component.translatable("text.vein-miner.config.block.magma_block"),
-                        config.magmaBlock
-                )
-                .setDefaultValue(true)
-                .setTooltip(Component.translatable("text.vein-miner.config.block.magma_block.tooltip"))
-                .setSaveConsumer(val -> config.magmaBlock = val)
-                .build());
-
-        general.addEntry(blocksSub.build());
-
-        // 4. Custom blocks section
-        SubCategoryBuilder customBlocksSub = entryBuilder.startSubCategory(
-                Component.translatable("category.vein-miner.custom_blocks")
-        );
-        customBlocksSub.setExpanded(true);
-
-        customBlocksSub.add(new CustomBlockSearchEntry(
-                Component.translatable("category.vein-miner.custom_blocks"),
-                config.customBlocks,
-                newBlocks -> config.customBlocks = newBlocks
-        ));
-
-        general.addEntry(customBlocksSub.build());
+        general.addEntry(GroupSubCategoryBuilder.createToolGroupSubCategory(entryBuilder, new PickaxeGroup()));
+        general.addEntry(GroupSubCategoryBuilder.createToolGroupSubCategory(entryBuilder, new AxeGroup()));
+        general.addEntry(GroupSubCategoryBuilder.createToolGroupSubCategory(entryBuilder, new ShovelGroup()));
+        general.addEntry(GroupSubCategoryBuilder.createBlockGroupSubCategory(entryBuilder));
 
         return builder.build();
     }
