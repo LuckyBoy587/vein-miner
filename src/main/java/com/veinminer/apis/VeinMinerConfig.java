@@ -1,9 +1,12 @@
 package com.veinminer.apis;
 
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface VeinMinerConfig {
     boolean isVeinMinerEnabled();
-    boolean isVeinBlock(Block block);
-    boolean isVeinMinerTool();
+
+    boolean isVeinBlock(BlockState blockState);
+
+    boolean isVeinMinerTool(ItemStack heldItem);
 }

@@ -5,6 +5,7 @@ import com.veinminer.apis.Task;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashSet;
@@ -14,11 +15,10 @@ import java.util.Set;
 
 public class MiningTask implements Task {
     public static final int MAX_BLOCKS_PER_TICK = 1000;
-
+    private static final VeinMinerConfigImpl veinMinerConfig = new VeinMinerConfigImpl();
     private final ServerLevel world;
     private final ServerPlayer player;
     private final String blockName;
-
     private final Queue<BlockPos> queue = new LinkedList<>();
     private final Set<BlockPos> mined = new HashSet<>();
 
@@ -40,8 +40,10 @@ public class MiningTask implements Task {
         int blocksToMine = Math.min(MAX_BLOCKS_PER_TICK, queue.size());
         while (!queue.isEmpty() && blocksToMine-- > 0) {
             BlockPos currentPos = queue.poll();
-            player.gameMode.destroyBlock(currentPos);
-            mined.add(currentPos);
+            if (!mineBlock(currentPos)) {
+                VeinMiner.log("Stopped mining early");
+                break;
+            }
 
             addNeighbourBlocks(currentPos);
         }
@@ -70,5 +72,15 @@ public class MiningTask implements Task {
     private String getBlockName(BlockPos pos) {
         BlockState state = world.getBlockState(pos);
         return state.getBlock().getName().getString();
+    }
+
+    private boolean mineBlock(BlockPos pos) {
+        ItemStack heldItem = player.getMainHandItem();
+        if (!veinMinerConfig.isVeinMinerTool(heldItem)) {
+            return false;
+        }
+        player.gameMode.destroyBlock(pos);
+        mined.add(pos);
+        return true;
     }
 }

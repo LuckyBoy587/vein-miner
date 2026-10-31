@@ -11,7 +11,7 @@
   "text.vein-miner.config.pickaxe.golden": "Golden Pickaxe",
   "text.vein-miner.config.pickaxe.diamond": "Diamond Pickaxe",
   "text.vein-miner.config.pickaxe.netherite": "Netherite Pickaxe",
-  "text.vein-miner.config.block.ores": "ORES",
+  "text.vein-miner.config.block.ores": "Ore Blocks",
   "text.vein-miner.config.block.ores.tooltip": "Toggle vein mining for ore blocks.",
   "text.vein-miner.config.block.magma_block": "Magma Block",
   "text.vein-miner.config.block.magma_block.tooltip": "Toggle vein mining for magma blocks."
