@@ -27,4 +27,8 @@ public class VeinMiner implements ModInitializer {
 	public static Identifier id(String path) {
 		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
+
+	public static void log(String message) {
+        LOGGER.info("VEIN MINER: {}", message);
+	}
 }
