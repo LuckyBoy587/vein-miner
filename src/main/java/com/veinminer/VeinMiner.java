@@ -1,5 +1,6 @@
 package com.veinminer;
 
+import com.veinminer.config.VeinMinerConfigData;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.resources.Identifier;
@@ -22,6 +23,7 @@ public class VeinMiner implements ModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Hello Fabric world!");
+		VeinMinerConfigData.load();
 	}
 
 	public static Identifier id(String path) {
