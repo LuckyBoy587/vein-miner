@@ -1,0 +1,18 @@
+{
+  "title.vein-miner.config": "Vein Miner Configuration",
+  "category.vein-miner.general": "General",
+  "category.vein-miner.pickaxes": "Pickaxes",
+  "category.vein-miner.blocks": "Blocks",
+  "text.vein-miner.config.enable_vein_miner": "Enable Vein Miner",
+  "text.vein-miner.config.enable_vein_miner.tooltip": "Master switch to enable or disable the Vein Miner functionality.",
+  "text.vein-miner.config.pickaxe.wooden": "Wooden Pickaxe",
+  "text.vein-miner.config.pickaxe.stone": "Stone Pickaxe",
+  "text.vein-miner.config.pickaxe.iron": "Iron Pickaxe",
+  "text.vein-miner.config.pickaxe.golden": "Golden Pickaxe",
+  "text.vein-miner.config.pickaxe.diamond": "Diamond Pickaxe",
+  "text.vein-miner.config.pickaxe.netherite": "Netherite Pickaxe",
+  "text.vein-miner.config.block.ores": "ORES",
+  "text.vein-miner.config.block.ores.tooltip": "Toggle vein mining for ore blocks.",
+  "text.vein-miner.config.block.magma_block": "Magma Block",
+  "text.vein-miner.config.block.magma_block.tooltip": "Toggle vein mining for magma blocks."
+}
