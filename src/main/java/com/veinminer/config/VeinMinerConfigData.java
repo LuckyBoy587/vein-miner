@@ -10,6 +10,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VeinMinerConfigData {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -32,11 +34,17 @@ public class VeinMinerConfigData {
     public boolean ores = true;
     public boolean magmaBlock = true;
 
+    // Custom Blocks
+    public List<String> customBlocks = new ArrayList<>();
+
     public static void load() {
         if (Files.exists(CONFIG_PATH)) {
             try (BufferedReader reader = Files.newBufferedReader(CONFIG_PATH)) {
                 VeinMinerConfigData data = GSON.fromJson(reader, VeinMinerConfigData.class);
                 if (data != null) {
+                    if (data.customBlocks == null) {
+                        data.customBlocks = new ArrayList<>();
+                    }
                     INSTANCE = data;
                     VeinMiner.LOGGER.info("Vein Miner configuration loaded successfully.");
                     return;

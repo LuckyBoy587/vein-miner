@@ -14,5 +14,14 @@
   "text.vein-miner.config.block.ores": "Ore Blocks",
   "text.vein-miner.config.block.ores.tooltip": "Toggle vein mining for ore blocks.",
   "text.vein-miner.config.block.magma_block": "Magma Block",
-  "text.vein-miner.config.block.magma_block.tooltip": "Toggle vein mining for magma blocks."
+  "text.vein-miner.config.block.magma_block.tooltip": "Toggle vein mining for magma blocks.",
+  "category.vein-miner.custom_blocks": "Custom Blocks",
+  "text.vein-miner.config.custom_blocks.search_hint": "Search blocks by name or id...",
+  "text.vein-miner.config.custom_blocks.add": "Add",
+  "text.vein-miner.config.custom_blocks.added": "Added",
+  "text.vein-miner.config.custom_blocks.remove": "Remove",
+  "text.vein-miner.config.custom_blocks.empty_selected": "No custom blocks added yet.",
+  "text.vein-miner.config.custom_blocks.selected_title": "Selected Custom Blocks (%d)",
+  "text.vein-miner.config.custom_blocks.search_results_title": "Matching Blocks (Top 10)",
+  "text.vein-miner.config.custom_blocks.no_results": "No blocks found matching \"%s\""
 }

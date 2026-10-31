@@ -114,6 +114,20 @@ public class VeinMinerConfigScreen {
 
         general.addEntry(blocksSub.build());
 
+        // 4. Custom blocks section
+        SubCategoryBuilder customBlocksSub = entryBuilder.startSubCategory(
+                Component.translatable("category.vein-miner.custom_blocks")
+        );
+        customBlocksSub.setExpanded(true);
+
+        customBlocksSub.add(new CustomBlockSearchEntry(
+                Component.translatable("category.vein-miner.custom_blocks"),
+                config.customBlocks,
+                newBlocks -> config.customBlocks = newBlocks
+        ));
+
+        general.addEntry(customBlocksSub.build());
+
         return builder.build();
     }
 }
