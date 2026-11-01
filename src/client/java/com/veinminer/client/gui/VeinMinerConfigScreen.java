@@ -44,10 +44,10 @@ public class VeinMinerConfigScreen {
             .setSaveConsumer(newValue -> config.put(VeinMinerConfigConstants.ORES, newValue))
             .build());
 
+        general.addEntry(GroupSubCategoryBuilder.createBlockGroupSubCategory(entryBuilder));
         general.addEntry(GroupSubCategoryBuilder.createToolGroupSubCategory(entryBuilder, new PickaxeGroup()));
         general.addEntry(GroupSubCategoryBuilder.createToolGroupSubCategory(entryBuilder, new AxeGroup()));
         general.addEntry(GroupSubCategoryBuilder.createToolGroupSubCategory(entryBuilder, new ShovelGroup()));
-        general.addEntry(GroupSubCategoryBuilder.createBlockGroupSubCategory(entryBuilder));
 
         return builder.build();
     }
