@@ -35,6 +35,16 @@ public class VeinMinerConfigScreen {
                 .setSaveConsumer(newValue -> config.put(VeinMinerConfigConstants.ENABLED, newValue))
                 .build());
 
+        // 2. Crouch required toggle
+        general.addEntry(entryBuilder.startBooleanToggle(
+                        Component.translatable("text.vein-miner.config.crouch_required"),
+                        config.getOrDefault(VeinMinerConfigConstants.CROUCH_REQUIRED, true)
+                )
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("text.vein-miner.config.crouch_required.tooltip"))
+                .setSaveConsumer(newValue -> config.put(VeinMinerConfigConstants.CROUCH_REQUIRED, newValue))
+                .build());
+
         general.addEntry(entryBuilder.startBooleanToggle(
                 Component.translatable("text.vein-miner.config.block.ores"),
                 config.getOrDefault(VeinMinerConfigConstants.ORES, true)

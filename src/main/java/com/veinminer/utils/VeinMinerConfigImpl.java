@@ -42,4 +42,10 @@ public class VeinMinerConfigImpl implements VeinMinerConfig {
         String key = BuiltInRegistries.ITEM.getKey(heldItem.getItem()).toString();
         return config.getOrDefault(key, false);
     }
+
+    @Override
+    public boolean isCrouchRequired() {
+        VeinMinerConfigData config = VeinMinerConfigData.INSTANCE;
+        return config.getOrDefault(VeinMinerConfigConstants.CROUCH_REQUIRED, true);
+    }
 }
