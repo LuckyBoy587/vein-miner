@@ -5,6 +5,8 @@
   "category.vein-miner.blocks": "Blocks",
   "text.vein-miner.config.enable_vein_miner": "Enable Vein Miner",
   "text.vein-miner.config.enable_vein_miner.tooltip": "Master switch to enable or disable the Vein Miner functionality.",
+  "text.vein-miner.config.crouch_required": "Crouch Required",
+  "text.vein-miner.config.crouch_required.tooltip": "Require the player to be crouching to activate Vein Miner.",
   "text.vein-miner.config.pickaxe.wooden": "Wooden Pickaxe",
   "text.vein-miner.config.pickaxe.stone": "Stone Pickaxe",
   "text.vein-miner.config.pickaxe.iron": "Iron Pickaxe",

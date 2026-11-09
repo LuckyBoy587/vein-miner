@@ -45,6 +45,10 @@ public class MinerMixin {
             return;
         }
 
+        if (veinMinerConfig.isCrouchRequired() && !player.isCrouching()) {
+            return;
+        }
+
         ItemStack heldItem = player.getMainHandItem();
         if (!veinMinerConfig.isVeinMinerTool(heldItem)) {
             return;

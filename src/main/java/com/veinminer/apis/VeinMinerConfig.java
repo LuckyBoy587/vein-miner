@@ -9,4 +9,6 @@ public interface VeinMinerConfig {
     boolean isVeinBlock(BlockState blockState);
 
     boolean isVeinMinerTool(ItemStack heldItem);
+
+    boolean isCrouchRequired();
 }
