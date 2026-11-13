@@ -29,8 +29,12 @@ jobs:
       - name: build
         run: ./gradlew build
 
+      - name: sanitize branch name
+        id: branch
+        run: echo "name=${GITHUB_REF_NAME//\//-}" >> "$GITHUB_OUTPUT"
+
       - name: capture build artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: Artifacts-${{ github.ref_name }}
+          name: Artifacts-${{ steps.branch.outputs.name }}
           path: build/libs/
