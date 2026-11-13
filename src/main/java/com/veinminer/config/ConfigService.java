@@ -103,7 +103,7 @@ public final class ConfigService implements VeinMinerConfig {
     }
 
     public boolean isToolEnabled(Item item) {
-        return classifier.classifyItem(new ItemStack(item))
+        return classifier.classifyItem(item)
                 .map(this::isEnabled)
                 .orElse(false);
     }
@@ -114,7 +114,7 @@ public final class ConfigService implements VeinMinerConfig {
     }
 
     public synchronized void setToolEnabled(Item item, boolean value) {
-        classifier.classifyItem(new ItemStack(item)).ifPresent(target ->
+        classifier.classifyItem(item).ifPresent(target ->
                 store = store.withRule(new ExactTargetSelector(target.kind(), target.id()), value)
         );
     }

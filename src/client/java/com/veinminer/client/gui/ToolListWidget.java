@@ -102,7 +102,7 @@ final class ToolListWidget extends ObjectSelectionList<ToolListWidget.Row> {
                 graphics.fill(x, y, x + width, y + height, 0x22FFFFFF);
             }
 
-            GuiItemStacks.drawItem(graphics, tool.item(), x + 8, y + 4);
+            GuiItemStacks.drawItem(graphics, tool.item(), tool.material(), x + 8, y + 4);
 
             boolean enabled = ConfigService.INSTANCE.isToolEnabled(tool.item());
             Component state = enabled ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF;
