@@ -103,7 +103,7 @@ public final class ConfigService implements VeinMinerConfig {
     }
 
     public boolean isToolEnabled(Item item) {
-        return classifier.classifyItem(new ItemStack(item))
+        return classifier.classifyItem(item)
                 .map(this::isEnabled)
                 .orElse(false);
     }
@@ -114,7 +114,7 @@ public final class ConfigService implements VeinMinerConfig {
     }
 
     public synchronized void setToolEnabled(Item item, boolean value) {
-        classifier.classifyItem(new ItemStack(item)).ifPresent(target ->
+        classifier.classifyItem(item).ifPresent(target ->
                 store = store.withRule(new ExactTargetSelector(target.kind(), target.id()), value)
         );
     }
@@ -136,11 +136,11 @@ public final class ConfigService implements VeinMinerConfig {
     public Set<Identifier> explicitlyEnabledBlocks() {
         Set<Identifier> ids = new LinkedHashSet<>();
         for (ConfigRule rule : store.rules()) {
-            if (!rule.enabled() || !(rule.selector() instanceof ExactTargetSelector exact)) {
+            if (!rule.enabled() || !(rule.selector() instanceof ExactTargetSelector(TargetKind kind, Identifier id))) {
                 continue;
             }
-            if (exact.kind().equals(TargetKind.BLOCK)) {
-                ids.add(exact.id());
+            if (kind.equals(TargetKind.BLOCK)) {
+                ids.add(id);
             }
         }
         return ids;
@@ -149,9 +149,9 @@ public final class ConfigService implements VeinMinerConfig {
     public Map<String, Boolean> explicitBlockStates() {
         Map<String, Boolean> states = new LinkedHashMap<>();
         for (ConfigRule rule : store.rules()) {
-            if (rule.selector() instanceof ExactTargetSelector exact
-                    && exact.kind().equals(TargetKind.BLOCK)) {
-                states.put(exact.id().toString(), rule.enabled());
+            if (rule.selector() instanceof ExactTargetSelector(TargetKind kind, Identifier id)
+                    && kind.equals(TargetKind.BLOCK)) {
+                states.put(id.toString(), rule.enabled());
             }
         }
         return states;

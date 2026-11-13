@@ -5,7 +5,7 @@ import com.veinminer.config.model.ClassifiedTarget;
 import com.veinminer.config.model.TargetKind;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
@@ -27,19 +27,15 @@ public final class VanillaTargetClassifier implements TargetClassifier {
     }
 
     @Override
-    public Optional<ClassifiedTarget> classifyItem(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return Optional.empty();
-        }
-
-        Optional<ClassifiedTarget> tool = ToolFamilies.classify(stack.getItem());
+    public Optional<ClassifiedTarget> classifyItem(Item item) {
+        Optional<ClassifiedTarget> tool = ToolFamilies.classify(item);
         if (tool.isPresent()) {
             return tool;
         }
 
         // Preserve exact item rules from legacy configurations. The fallback
         // for non-tool items is still disabled.
-        Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier id = BuiltInRegistries.ITEM.getKey(item);
         return Optional.of(new ClassifiedTarget(TargetKind.ITEM, id, Classification.empty()));
     }
 }
