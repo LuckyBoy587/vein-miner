@@ -1,6 +1,6 @@
 package com.veinminer.client.gui;
 
-import com.veinminer.config.VeinMinerConfigData;
+import com.veinminer.config.ConfigService;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -18,13 +18,19 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 public class SearchableBlockListEntry extends AbstractConfigListEntry<Map<String, Boolean>> {
 
     private final EditBox searchBox;
     private final List<Block> displayedBlocks = new ArrayList<>();
-    private final Map<String, Button> toggleButtons = new LinkedHashMap<>();
+    private final Map<Block, Button> toggleButtons = new LinkedHashMap<>();
     private boolean edited = false;
 
     public SearchableBlockListEntry(Component title) {
@@ -58,21 +64,19 @@ public class SearchableBlockListEntry extends AbstractConfigListEntry<Map<String
         displayedBlocks.clear();
         toggleButtons.clear();
 
-        VeinMinerConfigData config = VeinMinerConfigData.INSTANCE;
+        ConfigService config = ConfigService.INSTANCE;
         String trimmed = query.trim().toLowerCase(Locale.ROOT);
 
         if (trimmed.isEmpty()) {
-            // When search is empty, show all blocks currently enabled (toggled ON)
-            for (Map.Entry<String, Boolean> entry : config.entrySet()) {
-                if (Boolean.TRUE.equals(entry.getValue())) {
-                    Identifier id = Identifier.tryParse(entry.getKey());
-                    if (id != null && BuiltInRegistries.BLOCK.containsKey(id)) {
-                        Block block = BuiltInRegistries.BLOCK.getValue(id);
-                        if (block != Blocks.AIR && block != Blocks.CAVE_AIR && block != Blocks.VOID_AIR) {
-                            displayedBlocks.add(block);
-                            createToggleButton(entry.getKey());
-                        }
-                    }
+            // When search is empty, show blocks explicitly enabled by the user.
+            for (Identifier id : config.explicitlyEnabledBlocks()) {
+                if (!BuiltInRegistries.BLOCK.containsKey(id)) {
+                    continue;
+                }
+                Block block = BuiltInRegistries.BLOCK.getValue(id);
+                if (isVisible(block)) {
+                    displayedBlocks.add(block);
+                    createToggleButton(block);
                 }
             }
             return;
@@ -82,7 +86,7 @@ public class SearchableBlockListEntry extends AbstractConfigListEntry<Map<String
         int count = 0;
         for (Identifier id : BuiltInRegistries.BLOCK.keySet()) {
             Block block = BuiltInRegistries.BLOCK.getValue(id);
-            if (block == Blocks.AIR || block == Blocks.CAVE_AIR || block == Blocks.VOID_AIR) {
+            if (!isVisible(block)) {
                 continue;
             }
 
@@ -91,7 +95,7 @@ public class SearchableBlockListEntry extends AbstractConfigListEntry<Map<String
 
             if (name.contains(trimmed) || idStr.contains(trimmed)) {
                 displayedBlocks.add(block);
-                createToggleButton(id.toString());
+                createToggleButton(block);
                 if (++count >= 15) {
                     break;
                 }
@@ -99,20 +103,24 @@ public class SearchableBlockListEntry extends AbstractConfigListEntry<Map<String
         }
     }
 
-    private void createToggleButton(String key) {
-        VeinMinerConfigData config = VeinMinerConfigData.INSTANCE;
-        Button btn = Button.builder(getToggleText(key), b -> {
-            boolean next = !config.getOrDefault(key, false);
-            config.put(key, next);
-            edited = true;
-            b.setMessage(getToggleText(key));
-        }).bounds(0, 0, 48, 18).build();
-
-        toggleButtons.put(key, btn);
+    private static boolean isVisible(Block block) {
+        return block != null && block != Blocks.AIR && block != Blocks.CAVE_AIR && block != Blocks.VOID_AIR;
     }
 
-    private Component getToggleText(String key) {
-        boolean enabled = VeinMinerConfigData.INSTANCE.getOrDefault(key, false);
+    private void createToggleButton(Block block) {
+        ConfigService config = ConfigService.INSTANCE;
+        Button btn = Button.builder(getToggleText(block), b -> {
+            boolean next = !config.isBlockEnabled(block);
+            config.setBlockEnabled(block, next);
+            edited = true;
+            b.setMessage(getToggleText(block));
+        }).bounds(0, 0, 48, 18).build();
+
+        toggleButtons.put(block, btn);
+    }
+
+    private Component getToggleText(Block block) {
+        boolean enabled = ConfigService.INSTANCE.isBlockEnabled(block);
         return enabled ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF;
     }
 
@@ -197,8 +205,7 @@ public class SearchableBlockListEntry extends AbstractConfigListEntry<Map<String
             String displayName = font.plainSubstrByWidth(block.getName().getString(), maxTextWidth);
             graphics.text(font, displayName, x + 26, currentY + 6, 0xFFFFFFFF);
 
-            String key = BuiltInRegistries.BLOCK.getKey(block).toString();
-            Button btn = toggleButtons.get(key);
+            Button btn = toggleButtons.get(block);
             if (btn != null) {
                 btn.setX(x + entryWidth - btnWidth - 4);
                 btn.setY(currentY + 2);
@@ -229,7 +236,7 @@ public class SearchableBlockListEntry extends AbstractConfigListEntry<Map<String
 
     @Override
     public Map<String, Boolean> getValue() {
-        return VeinMinerConfigData.INSTANCE;
+        return ConfigService.INSTANCE.explicitBlockStates();
     }
 
     @Override

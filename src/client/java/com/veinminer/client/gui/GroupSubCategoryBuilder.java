@@ -1,33 +1,31 @@
 package com.veinminer.client.gui;
 
-import com.veinminer.config.VeinMinerConfigData;
-import com.veinminer.tools.ToolGroup;
+import com.veinminer.classification.ToolEntry;
+import com.veinminer.classification.ToolFamily;
+import com.veinminer.config.ConfigDefaults;
+import com.veinminer.config.ConfigService;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 
 public class GroupSubCategoryBuilder {
 
-    public static AbstractConfigListEntry<?> createToolGroupSubCategory(ConfigEntryBuilder entryBuilder, ToolGroup toolGroup) {
+    public static AbstractConfigListEntry<?> createToolGroupSubCategory(ConfigEntryBuilder entryBuilder, ToolFamily toolFamily) {
         SubCategoryBuilder subCategory = entryBuilder.startSubCategory(
-            Component.literal(toolGroup.getName())
+            Component.literal(toolFamily.displayName())
         );
         subCategory.setExpanded(false);
 
-        VeinMinerConfigData config = VeinMinerConfigData.INSTANCE;
+        ConfigService config = ConfigService.INSTANCE;
 
-        for (Item tool : toolGroup.getTools()) {
-            String key = BuiltInRegistries.ITEM.getKey(tool).toString();
-
+        for (ToolEntry tool : toolFamily.entries()) {
             subCategory.add(entryBuilder.startBooleanToggle(
-                    Component.translatable(tool.getDescriptionId()),
-                    config.getOrDefault(key, true)
+                    Component.translatable(tool.item().getDescriptionId()),
+                    config.isToolEnabled(tool.item())
                 )
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> config.put(key, val))
+                .setDefaultValue(ConfigDefaults.TOOL_ENABLED)
+                .setSaveConsumer(val -> config.setToolEnabled(tool.item(), val))
                 .build());
         }
 

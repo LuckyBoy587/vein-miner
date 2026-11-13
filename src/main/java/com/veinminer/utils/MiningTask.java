@@ -2,6 +2,7 @@ package com.veinminer.utils;
 
 import com.veinminer.VeinMiner;
 import com.veinminer.apis.Task;
+import com.veinminer.config.ConfigService;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,7 +16,7 @@ import java.util.Set;
 
 public class MiningTask implements Task {
     public static final int MAX_BLOCKS_PER_TICK = 1000;
-    private static final VeinMinerConfigImpl veinMinerConfig = new VeinMinerConfigImpl();
+    private static final ConfigService veinMinerConfig = ConfigService.INSTANCE;
     private final ServerLevel world;
     private final ServerPlayer player;
     private final String blockName;

@@ -1,10 +1,8 @@
 package com.veinminer.mixin;
 
-import com.veinminer.VeinMiner;
 import com.veinminer.apis.Task;
-import com.veinminer.config.VeinMinerConfigData;
+import com.veinminer.config.ConfigService;
 import com.veinminer.utils.MiningTask;
-import com.veinminer.utils.VeinMinerConfigImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,7 +23,7 @@ import java.util.List;
 @Mixin(ServerPlayerGameMode.class)
 public class MinerMixin {
     @Unique
-    private static final VeinMinerConfigImpl veinMinerConfig = new VeinMinerConfigImpl();
+    private static final ConfigService veinMinerConfig = ConfigService.INSTANCE;
     @Final
     @Shadow
     protected ServerPlayer player;
@@ -39,8 +37,6 @@ public class MinerMixin {
 
     @Inject(method = "destroyAndAck", at = @At("HEAD"))
     private void onDestroyAndAck(BlockPos pos, int sequence, String exitId, CallbackInfo ci) {
-        VeinMinerConfigData config = VeinMinerConfigData.INSTANCE;
-        VeinMiner.log("State: " + config.toString());
         if (!veinMinerConfig.isVeinMinerEnabled()) {
             return;
         }
